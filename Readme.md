@@ -63,6 +63,20 @@ _Use dependency injection:_
 ```
 _We have now control over creation. We can also use dependency managers like Dagger2 and "inject" this dependency here_
 
+
+- Another important thing to mention here is _composition over inheritance_ will always be in favour of testable code. Since composition gives us more control over objects when we are using dependency injection, we can easily control these objects in test environment. In above example `UserService`, we can provide a `UserValidator` instead of implementing it. Just like `UserRepo` and `Request`, it can follow composition. But the abstraction is still maintained since no concrete references are used here.
+
+_Instead of:_
+```
+public class UserService implements UserValidator{
+...
+}
+```
+_We can do:_
+```
+ // constructor injection
+ public UserService(User user, Request userRequest, UserValidator validator) 
+```
 - Separate creation logic from business logic, thats what dependency managers do, if this is not the case, we might miss some business logic to test which was ran during creation of objects. Since tests and business classes should not be responsible for creating objects involved in a business logic flow.
 
 _Avoid writing business logic in constructor or anywhere in creation classes like dependency managers:_
@@ -126,6 +140,7 @@ public class Utils{
 }
 ```
 _In other words, static classes cant be used with dependency injections so they lack this flexibility of being separating creation logic from actual business logic. This brings us to the point number 1, where we are unable to control the test environment._
+
 
 - Tests are written for public methods. Because other classes or layers call public methods of classes that provide business logics. These methods in turn, call private methods which itself covers these private methods. DONT make private methods public for just writing TESTS.
 
@@ -225,5 +240,13 @@ The value captured in the _act_ is _asserted_ to be true or false. The `assertTr
 
 There is a message _Expected to validate positive number as valid age but failed_ passed as 1st parameter. This is failure message. It is important to flag failures with meaningful messages. So when someone come across a failed test case in the log, s/he can identify what is the problem. _This is also a good practice._
 
+
+In most of the cases, this assert flow works in tests. But sometimes the methods dont return values. Like in VIPER which uses callback pattern. In this case `view` is holding reference to `presenter` and a `view` reference is inside a `presenter`. `View` calls `presenter.fetchSomething()` this method does not return anything but after it fetches, it calls `view.onSuccessfulFetch()`. How can we test presenter since its methods dont return anything?
+
+Similarly in case of `Request` when the `UserService` calls `createUser(User user)`, it doesnt do anything. It calls `request.execute(user, this)` and return nothing.
+
+There are two things we can do to test the flows or method that dont return anything:
+- If the method calls another method on any other object, this method call can be `verified` by Mockito framework. This is called testing interactions where we cannot test states (asserting values).
+- Check if the code runs without any exception. This is not the only thing you should be doing, but in rare cases like these, this is important factor.
 
 
