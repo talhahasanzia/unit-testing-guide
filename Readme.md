@@ -37,9 +37,48 @@ In the following discussion I will be using Java as the example language and som
 - First and foremost thing is seprating the dependencies from the code. For this you should be able to recognize what are the dependencies and what is the actual code that needs to be tested.
 - In terms of Java and Android, if you are working in Android, your business layer should be testable without any Android dependencies.
 - Continuing on Android as example, for the business layer (and unit tests themselves), most of the Android framework stuff will be dependencies for code. Like network library, Retrofit.
+
+_Instead of:_
+```
+    public UserService(User user, Retrofit retrofit)
+```
+_Use some abstraction:_
+```
+    public UserService(User user, Request userRequest) 
+```
+_Using an abstraction layer of Request class to wrap retrofit in it so the code doesnt depend on Android Retrofit_
+
 - Creation of objects should be delegated to upper level, like dependency manager. If a class that needs to be tested is creating its own objects inside, we cannot control data in those objects to test.
+
+_Instead of:_
+```
+    public UserService(User user){
+      request = new Request();
+      ...
+    }
+```
+_Use dependency injection:_
+```
+    public UserService(User user, Request userRequest) 
+```
+_We have now control over creation. We can also use dependency managers like Dagger2 and "inject" this dependency here_
+
 - Separate creation logic from business logic, thats what dependency managers do, if this is not the case, we might miss some business logic to test which was ran during creation of objects. Since tests and business classes should not be responsible for creating objects involved in a business logic flow.
-- Unit tests usually targets business layer, so regardless of any framework you are, your code that needs to be tested must be using the core language libraries.
+_Avoid writing logic in Constructor:_
+```
+    public UserService(User user, Request userRequest){
+      if(userRequest !=null){
+        this.userRequest= userRequest;   // This block is never tested since it is just creating object
+      }
+    }
+```
+- Unit tests usually targets business layer, so regardless of any framework you are, your code that needs to be tested must be using the core language libraries. A good way to realize this in Java is to look at `imports` section. If there is an import that is not coming from core Java it should raise alarm.
+```
+import android.os.Bundle; // <--- This is not good in business layer
+import android.view.View; // <--- This is not good in business layer
+import com.selfsol.app.models.user; // <--- This is ok as it is a POJO model
+```
+_First priority should be to avoid such dependencies, if not possible their creation should be delegated to dependency managers with proper abstractions. So when this class is tested, these dependencies can easily be mocked with dummy values or behavior and unit tests are not blocked._
 - Its nice to have to follow an architectural pattern to manage code, whether it be MVVP, MVP, VIPER or any other, primary goal is to make code clean, maintainable and testable, which makes it helpful to work with such codebase in the longer run.
 - The implementation of architecture doesnt really provide all the solutions, so there are still few things that needs to be decoupled, like networking and UI stuff. 
 - Generally, we dont need network or UI when writing unit tests, so if there is a good abstraction layer between the business logic layers and UI or Network etc, it will help us mock these entities and validate the actual business logic in tests.
