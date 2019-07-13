@@ -241,6 +241,7 @@ The value captured in the _act_ is _asserted_ to be true or false. The `assertTr
 There is a message _Expected to validate positive number as valid age but failed_ passed as 1st parameter. This is failure message. It is important to flag failures with meaningful messages. So when someone come across a failed test case in the log, s/he can identify what is the problem. _This is also a good practice._
 
 
+### But wait, our code is not that simple!
 In most of the cases, this assert flow works in tests. But sometimes the methods dont return values. Like in VIPER which uses callback pattern. In this case `view` is holding reference to `presenter` and a `view` reference is inside a `presenter`. `View` calls `presenter.fetchSomething()` this method does not return anything but after it fetches, it calls `view.onSuccessfulFetch()`. How can we test presenter since its methods dont return anything?
 
 Similarly in case of `Request` when the `UserService` calls `createUser(User user)`, it doesnt do anything. It calls `request.execute(user, this)` and return nothing.
