@@ -20,5 +20,5 @@ There are generally 2 approaches when writing unit tests,
 - Allows identification of logical bugs in the code.
 - If unit tests are written regugarly, they make code resist to changes that breaks the code. If a change in the code fails the unit test, either the code has issue or test is not updated, both ways, its a warning sign for developer to put an extra effort to investgate the issue before closing the development cycle.
 - It seems waste of time and extra effort at the beginning, and it is, but few days effort of maintaining the code with meaningful unit tests saves months of refactoring later.
-- It makes code cleaner - since the tests require certain level of abstraction and loose coupling in the code they make code more cleaner.
+- It makes code cleaner - since the tests require certain level of abstraction and loose coupling which make code more cleaner.
 
