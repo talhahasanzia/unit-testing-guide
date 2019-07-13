@@ -303,10 +303,10 @@ Mocking a method of an object that is marked as `Mock` is as easy as:
 // this should be done in "Arrange" phase, in our case in setup() method
 Mockito.when(userValidator.validateId(l363)).thenReturn(true);
 ```
-This will setup `userValidator` to return true when its `validateId()` is called with id 1363. Similarly we can design many flows using same approach including multiple happy cases and also failure cases to test if code gives expeted output on wrong inputs. All great but this is not applicable for callback/async methods.
+This will setup `userValidator` to return true when its `validateId()` is called with id 1363. Similarly we can design many flows using same approach including multiple happy cases and also failure cases to test if code gives expected output on wrong inputs. All great but this is not applicable for callback/async methods.
 
 Luckily, in Java, we have `Mockito`'s `Answer` to solve the problem. But we have to make another change. Since we want to mock response, we will have to provide it as dependency. See this is how unit tests can help refactor your code to be more decoupled and resilient. Now coming back to point. 
-_Making Response testable in UserService:_ (Refer to UserService2)
+_Making Response testable in UserService:_ (Refer to [`UserService2`](https://github.com/talhahasanzia/unit-testing-guide/blob/master/UserService2.java))
 ```
 public class UserService2 implements UserValidator { // notice it is not implementing Response Callback now
 
@@ -324,7 +324,7 @@ public class UserService2 implements UserValidator { // notice it is not impleme
 
 }
 ```
-_Mocking Callback object so its calls can be tested by Mockito:_
+_Mocking Callback object so its calls can be tested by Mockito:_ (See [`UserService2Test`](https://github.com/talhahasanzia/unit-testing-guide/blob/master/UserService2Test.java))
 ```
 
 @RunWith(MockitoJUnitRunner.class)
@@ -373,7 +373,7 @@ public class UserService2Test {
 
 }
 ```
-_This is like: When `request.execute(user, response)` is called, call `onSuccess(user)` on response object that was passed._
+_This is like: When `request.execute(user, response)` is called, call `onSuccess(user)` on `response` object that was passed._
 And the parameter checks will work like same as mentioned before.
 
 Now you have powerful tools at your disposal to write unit tests for most of the code in your project. To put things in perspective, testing on methods that return anything is done by simple `asserts` that test state of returned values. Testing on methods that dont return anything is done by `verify`. Although it takes much effort to test methods that return no value, but we can actually test the whole interaction alongwith testing state of the parameters which are same as returned values most of the time.
