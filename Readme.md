@@ -64,11 +64,12 @@ _Use dependency injection:_
 _We have now control over creation. We can also use dependency managers like Dagger2 and "inject" this dependency here_
 
 - Separate creation logic from business logic, thats what dependency managers do, if this is not the case, we might miss some business logic to test which was ran during creation of objects. Since tests and business classes should not be responsible for creating objects involved in a business logic flow.
-_Avoid writing logic in Constructor:_
+
+_Avoid writing business logic in constructor or anywhere in creation classes like dependency managers:_
 ```
     public UserService(User user, Request userRequest){
       if(userRequest !=null){
-        this.userRequest= userRequest;   // This block is never tested since it is just creating object
+        this.userRequest= userRequest;   // This block is never tested since it is just creation block
       }
     }
 ```
