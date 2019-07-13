@@ -50,7 +50,7 @@ _Using an abstraction layer of Request class to wrap retrofit in it so the code 
 
 - Creation of objects should be delegated to upper level, like dependency manager. If a class that needs to be tested is creating its own objects inside, we cannot control data in those objects to test.
 
-_Instead of:_
+_Instead of using "new" keywords in code:_
 ```
     public UserService(User user){
       request = new Request();
@@ -82,7 +82,26 @@ import com.selfsol.app.models.user; // <--- This is ok as it is a POJO model
 _First priority should be to avoid such dependencies, if not possible their creation should be delegated to dependency managers with proper abstractions. So when this class is tested, these dependencies can easily be mocked with dummy values or behavior and unit tests are not blocked._
 - Its nice to have to follow an architectural pattern to manage code, whether it be MVVP, MVP, VIPER or any other, primary goal is to make code clean, maintainable and testable, which makes it helpful to work with such codebase in the longer run.
 - The implementation of architecture doesnt really provide all the solutions, so there are still few things that needs to be decoupled, like networking and UI stuff. 
-- Generally, we dont need network or UI when writing unit tests, so if there is a good abstraction layer between the business logic layers and UI or Network etc, it will help us mock these entities and validate the actual business logic in tests.
+```
+// class for abstraction of network library
+public interface Request<T>{
+    void execute( T data);
+}
+// class having real network classes and implementation
+public class UserRequest<User> implements Request{
+    ...
+}
+// creation of this class
+public class SomeDependencyProvider(){
+    // notice interface reference in return type
+    public Request<User> createRequestObject(){
+        return new UserRequest();
+    }
+}
+```
+
+_Generally, we dont need network or UI when writing unit tests, so if there is a good abstraction layer between the business logic layers and UI or Network etc, it will help us mock these entities and validate the actual business logic in tests_
+
 - Static methods makes it hard to test unless they are pure methods and donot use or create any dependency objects in their execution, moreover these static methods or objects cannot be mocked easily which are blocker in unit testing.
 - Tests are written for public methods. Because other classes or layers call public methods of classes that provide business logics. These methods in turn, call private methods which itself covers these private methods. DONT make private methods public for just writing TESTS.
 - Always use interfaces (in java atleast the interface is available) while calling public methods, this ensures the implementation is hidden and can be mocked easily.
