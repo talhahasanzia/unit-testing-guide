@@ -34,6 +34,7 @@ In the following discussion I will be using Java as the example language and som
 - In programming, every line of code generates a business value, no one likes to lose business, unit tests verify that the business value that code aims to provide is on the spot.
 
 ### Writing Testable Code - A pre-requisite
+- Unit tests are written in controlled environment, this helps us provide certain conditions under which we expect certain outcomes. If we cannot control the agents or entities that are driving these conditions we cannot be sure about the outputs. This test environment is largely controlled by dependencies we provide to the test case.
 - First and foremost thing is seprating the dependencies from the code. For this you should be able to recognize what are the dependencies and what is the actual code that needs to be tested.
 - In terms of Java and Android, if you are working in Android, your business layer should be testable without any Android dependencies.
 - Continuing on Android as example, for the business layer (and unit tests themselves), most of the Android framework stuff will be dependencies for code. Like network library, Retrofit.
@@ -125,11 +126,45 @@ public class Utils{
     
 }
 ```
-_In other words, static classes cant be used with dependency injections so they lack this flexibility of being separating creation logic from actual business logic._
+_In other words, static classes cant be used with dependency injections so they lack this flexibility of being separating creation logic from actual business logic. This brings us to the point number 1, where we are unable to control the test environment._
 
 - Tests are written for public methods. Because other classes or layers call public methods of classes that provide business logics. These methods in turn, call private methods which itself covers these private methods. DONT make private methods public for just writing TESTS.
-- Always use interfaces (in java atleast the interface is available) while calling public methods, this ensures the implementation is hidden and can be mocked easily.
-- When writing a test for a class, the target class should be instantiated as a concrete implementation, so the real code is ran, and all other participating objects are mocked. If the participating objects have abstraction (they are interface objects), mocking becomes so easy.
+
+```
+public class UserService{
+
+    public boolean validateUser(User user){
+        validateAge(age);
+    }
+    
+    private boolean validateAge(int age){
+    }
+}
+```
+_In above example, we will write test for validateUser(), which will also cover validateAge(), if we do want to test such methods individually we can introduce an interface that contains these signatures, in this way these methods will hide their implementation details and yet they will be accessible for testing from outside or mocking if required._ 
+
+- When writing a test for a class, the target class should be instantiated as a concrete implementation, so the real code is ran, and all other participating objects are mocked. If the participating objects have abstraction (they are interface objects), mocking becomes  easy.
+
+_Consider writing test for UserService:_
+```
+@RunWith(MockitoJUnitRunner.class)
+public class UserServiceTest {
+    // Class reference
+    private UserService userService;
+    
+    // interface reference mocked
+    @Mock
+    Request request;
+
+    // interface reference mocked
+    @Mock
+    UserRepo userRepo;
+...
+}
+```
+_We can later define how "request" behaves when its methods are called, same for "userRepo". Point is, this way, by making them abstract, decoupled and using dependency injection pattern, it is easier to control these participating objects and we can design our test by providing values and behaviours the way we like to._
+
+
 ### Writing Unit Tests
 - We will use Java and its testing framework JUnit in these examples, moreover, we will refer Mockito for mocking objects. 
 - We will focus on UserService (or UserManager) example, in which, we will validate creation of valid users in a system.
