@@ -190,11 +190,40 @@ See [`UserServiceTest`](https://github.com/talhahasanzia/unit-testing-cheatsheet
     UserRepo userRepo;
 
  ```
- _How mocks work? see this:_
+ _How mocks work?_
  ```
     // MockitoJunitRunner initializes mocks itself when tests starts
     @RunWith(MockitoJUnitRunner.class)
     public class UserServiceTest {
 ```
+_And finally setting up the Test Class:_
+```
+userService = new UserService(request, userRepo);
+```
 
- 
+The setup seems easy and simple because we already followed the practices in the code that are test friendly, here using injection pattern instead of creating dependencies in the object itself. We were able to provide `UserRepo` and `Request` from outside based on our requirement here.
+
+### Act
+_Now we perform our test:_
+```
+    @Test
+    public void testValidAge_inputPositiveNumber_shouldValidateSuccess() {
+        boolean result = userService.validateAge(18);
+        ...
+    }
+```
+This is how we right test in JUnit. Notice that the function name is like a sentence that tells the whole story. In source code, this convention may not be liked by many, but in tests, this is preferred. It explains a lot about the test. Since tests dont have that amount of documentation that code has (if any), this is important. The convention goes like this: `testMethod_conditions_outcomes()`
+
+Then the _act_ happens. The method is called and the value is captured. 
+
+### Assert
+
+```
+    assertTrue("Expected to validate positive number as valid age but failed", result);
+```
+The value captured in the _act_ is _asserted_ to be true or false. The `assertTrue` is a JUnit assertion method which checks the given condition alongwith option to provide a message in case of failure. We are not discussing implementation at this point just the approach. All the implementations are left blank.
+
+There is a message _Expected to validate positive number as valid age but failed_ passed as 1st parameter. This is failure message. It is important to flag failures with meaningful messages. So when someone come across a failed test case in the log, s/he can identify what is the problem. _This is also a good practice._
+
+
+
