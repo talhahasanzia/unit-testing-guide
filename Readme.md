@@ -306,6 +306,8 @@ Mockito.when(userValidator.validateId(l363)).thenReturn(true);
 This will setup `userValidator` to return true when its `validateId()` is called with id 1363. Similarly we can design many flows using same approach including multiple happy cases and also failure cases to test if code gives expected output on wrong inputs. All great but this is not applicable for callback/async methods.
 
 Luckily, in Java, we have `Mockito`'s `Answer` to solve the problem. But we have to make another change. Since we want to mock response, we will have to provide it as dependency. See this is how unit tests can help refactor your code to be more decoupled and resilient. Now coming back to point. 
+
+
 _Making Response testable in UserService:_ (Refer to [`UserService2`](https://github.com/talhahasanzia/unit-testing-guide/blob/master/UserService2.java))
 ```
 public class UserService2 implements UserValidator { // notice it is not implementing Response Callback now
