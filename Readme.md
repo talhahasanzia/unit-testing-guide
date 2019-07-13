@@ -10,7 +10,7 @@
 There are generally 2 approaches when writing unit tests,
 - One is test-driven-development, in which unit tests are written first, these tests specify requirements and at first they should fail because there is no code to produce required output, the code is then written around them to meet requirements and make tests pass.
 - Other approach is retrospective testing, that is, after writing code, we write unit tests. This is more commonly used approach in practice (if there are unit tests written at all). We simply write code and then write unit tests after the code and validate code behaviours.
-- With both approaches, it is a good practice to run unit tests as often as you can, after every code change, this will result in early identificaion of flaws in the system.
+- With both approaches, it is a good practice to run unit tests as often as you can, after every code change, this will result in early identification of flaws in the system.
 
 ## Who writes Unit Tests?
 - Developers. Period.
@@ -19,7 +19,7 @@ There are generally 2 approaches when writing unit tests,
 - Unit tests validate small pieces code for expected outcomes and report early issues.
 - Unit tests also make sure that the code is giving errors where expected, this way a lot of corner cases are covered.
 - Allows identification of logical bugs in the code when they are covering edge cases.
-- If unit tests are written regugarly, they make code resist to changes that breaks the code. If a change in the code fails the unit test, either the code has issue or test is not updated, both ways, its a warning sign for developer to put an extra effort to investgate the issue before closing the development cycle.
+- If unit tests are written regularly, they make code resist to changes that breaks the code. If a change in the code fails the unit test, either the code has issue or test is not updated, both ways, its a warning sign for developer to put an extra effort to investigate the issue before closing the development cycle.
 - It seems waste of time and extra effort at the beginning, and it is, but few days effort of maintaining the code with meaningful unit tests saves months of refactoring later.
 - It makes code cleaner - since the tests require certain level of abstraction and loose coupling which make code more cleaner.
 
@@ -29,13 +29,13 @@ In the following discussion I will be using Java as the example language and som
 ### Intention
 - The purpose of this writing is to promote the unit tests in software projects, specially those which are shaping the way we live, these projects can be related to finance, medicine, transport or online shopping.
 - The bugs or problems in these softwares causes both customers and developers to lose their time and money.
-- Promoting unit tests can save a lot of time in covering basic business logic validations and resulting a reliable software which can be fruitful for all the enities in the business.
+- Promoting unit tests can save a lot of time in covering basic business logic validations and resulting a reliable software which can be fruitful for all the entities in the business.
 - Writing unit test for the sake of unit tests or say achieving high code coverage is not a good idea. If the tests are not playing their part in verifying business flows, they are of no value.
 - In programming, every line of code generates a business value, no one likes to lose business, unit tests verify that the business value that code aims to provide is on the spot.
 
-### Writing Testable Code - A pre-requisite
+### Writing Testable Code - A prerequisite
 - Unit tests are written in controlled environment, this helps us provide certain conditions under which we expect certain outcomes. If we cannot control the agents or entities that are driving these conditions we cannot be sure about the outputs. This test environment is largely controlled by dependencies we provide to the test case.
-- First and foremost thing is seprating the dependencies from the code. For this you should be able to recognize what are the dependencies and what is the actual code that needs to be tested.
+- First and foremost thing is separating the dependencies from the code. For this you should be able to recognize what are the dependencies and what is the actual code that needs to be tested.
 - In terms of Java and Android, if you are working in Android, your business layer should be testable without any Android dependencies.
 - Continuing on Android as example, for the business layer (and unit tests themselves), most of the Android framework stuff will be dependencies for code. Like network library, Retrofit.
 
