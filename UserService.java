@@ -1,5 +1,3 @@
-package com.munchies.customer.auth.register.presenters;
-
 public class UserService implements UserValidator, Response {
 
     private Request request;
