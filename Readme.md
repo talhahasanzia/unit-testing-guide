@@ -27,8 +27,8 @@ There are generally 2 approaches when writing unit tests,
 - The purpose of this writing is to promote the unit tests in software projects, specially those which are shaping the way we live, these projects can be related to finance, medicine, transport or online shopping.
 - The bugs or problems in these softwares causes both customers and developers to lose their time and money.
 - Promoting unit tests can save a lot of time in covering basic business logic validations and resulting a reliable software which can be fruitful for all the enities in the business.
-- Writing unit test for the sake of unit tests or say achieving high code coverage is not a good idea. If the tests are not playing their part in verifying flows, they are of no value.
-- In programming, every line of code generates a business value, no one likes to lose business, unit tests verify that the business value that code is providing is achieving its target.
+- Writing unit test for the sake of unit tests or say achieving high code coverage is not a good idea. If the tests are not playing their part in verifying business flows, they are of no value.
+- In programming, every line of code generates a business value, no one likes to lose business, unit tests verify that the business value that code aims to provide is on the spot.
 
 ### Writing Testable Code - A pre-requisite
 
