@@ -82,15 +82,20 @@ import com.selfsol.app.models.user; // <--- This is ok as it is a POJO model
 _First priority should be to avoid such dependencies, if not possible their creation should be delegated to dependency managers with proper abstractions. So when this class is tested, these dependencies can easily be mocked with dummy values or behavior and unit tests are not blocked._
 - Its nice to have to follow an architectural pattern to manage code, whether it be MVVP, MVP, VIPER or any other, primary goal is to make code clean, maintainable and testable, which makes it helpful to work with such codebase in the longer run.
 - The implementation of architecture doesnt really provide all the solutions, so there are still few things that needs to be decoupled, like networking and UI stuff. 
+
+Following example illustrates how this abstraction can be achieved and how it is created in dependency manager layer:
+
 ```
 // class for abstraction of network library
 public interface Request<T>{
     void execute( T data);
 }
+
 // class having real network classes and implementation
 public class UserRequest<User> implements Request{
     ...
 }
+
 // creation of this class
 public class SomeDependencyProvider(){
     // notice interface reference in return type
@@ -103,6 +108,25 @@ public class SomeDependencyProvider(){
 _Generally, we dont need network or UI when writing unit tests, so if there is a good abstraction layer between the business logic layers and UI or Network etc, it will help us mock these entities and validate the actual business logic in tests_
 
 - Static methods makes it hard to test unless they are pure methods and donot use or create any dependency objects in their execution, moreover these static methods or objects cannot be mocked easily which are blocker in unit testing.
+
+_Consider following class in which one method is acceptable but the other one creates trouble:_
+
+```
+public class Utils{
+    // this wont be any trouble
+    public static boolean isEmptyString( String string){
+        return string !=null && !string.isEmpty();
+    }
+    // this will cause issue since this is using an object that is in its static scope and cannot be mocked
+    public static Date formatDate(String pattern, long timeInMillis){
+        DateFormatter formatter = new DateFormatter( pattern );
+        return formatter.format( timeInMillis );
+    }
+    
+}
+```
+_In other words, static classes cant be used with dependency injections so they lack this flexibility of being separating creation logic from actual business logic._
+
 - Tests are written for public methods. Because other classes or layers call public methods of classes that provide business logics. These methods in turn, call private methods which itself covers these private methods. DONT make private methods public for just writing TESTS.
 - Always use interfaces (in java atleast the interface is available) while calling public methods, this ensures the implementation is hidden and can be mocked easily.
 - When writing a test for a class, the target class should be instantiated as a concrete implementation, so the real code is ran, and all other participating objects are mocked. If the participating objects have abstraction (they are interface objects), mocking becomes so easy.
@@ -111,7 +135,7 @@ _Generally, we dont need network or UI when writing unit tests, so if there is a
 - We will focus on UserService (or UserManager) example, in which, we will validate creation of valid users in a system.
 - We will not test classes that serves as dependencies in the UserService, these are UI classes referred as "View" in most of the architectures and Network classes like Request or Response. We will mock these dependencies.
 - It is not our responsibility to test 3rd Party library classes like Retrofit, Gson, Picasso, OkHttp etc.
-- Meaningful names of test methods - test method names should be self explanatory.
+- Meaningful names of test methods should be used, these names can be longer as long as they are self explanatory.
 - AAA Testing Pattern - Arrange, Act, Assert is the pattern we will use and it goes as follows:
   - Arrange: Setup objects, parameters and environment for the test
   - Act: Perform action, the actual code is ran on which test is to be done
