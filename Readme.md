@@ -1,5 +1,7 @@
 
 # Unit Testing Guide
+Please follow https://testing.googleblog.com/ for updates on new testing libraries and approaches.
+
 ## What is Unit Testing?
 - In its simplest term, unit testing is testing a small piece of code.
 - A unit test usually targets a single method that perform a single task.
@@ -386,3 +388,5 @@ Some developers take approach of mocking servers that use Retrofit callbacks and
 
 
 _Feel free to give feedback on what I might have missed or what can be improved in this small piece of writing. Thanks for reading!_
+
+And remember to follow https://testing.googleblog.com/ for updates on new testing libraries and approaches.
