@@ -249,4 +249,137 @@ There are two things we can do to test the flows or method that dont return anyt
 - If the method calls another method on any other object, this method call can be `verified` by Mockito framework. This is called testing interactions where we cannot test states (asserting values).
 - Check if the code runs without any exception. This is not the only thing you should be doing, but in rare cases like these, this is important factor.
 
+_Following code piece can illustrate this as:_
+```
+    @Test
+    public void testCreateUser_validUserProvided_shouldCallRequestExecuteWithUser(){
+        // act
+        userService.createUser(user);
+        // assert
+        Mockito.verify(request).execute(user, userService);
 
+    }
+```
+
+One of the coolest thing that this `verify` does is that it matches the parameter with actual call. For example:
+```
+Mockito.verify(request).execute(user, userService);
+```
+will pass the test, but 
+
+```
+Mockito.verify(request).execute(null, userService);
+```
+will fail, why? Because the actual call used same object as we mentioned. This was our specific case where we knew both parameters, but cases where we dont know the exact parameters, we can specify `any()` in parameter to allow any object with any value. We can also narrow down this to specific type by calling `any(String.class)` this will allow objects with only string type but with any value in it.
+```
+Mockito.verify(request).execute(any(), userService);
+```
+This is really useful in callback patterns. In simple method call a value is returned. In callbacks, the value is returned in a callback's succes method as parameters. Consider following async call made for validation earlier:
+```
+// simple call
+boolean result = userService.validateAge(18);
+```
+And its callback version would look like:
+```
+userService.validateAge(18, validationCallback);
+....
+```
+and where the validation callback is implemented:
+```
+...
+onValidationComplete(boolean success){
+...
+}
+```
+You can see that boolean value that was returned in simple call is now a parameter for callback's method. Considering same example we can write assertion as:
+```
+Mockito.verify(validationCallback).onValidationComplete(true);
+```
+This should work right? No. Since the object is mocked we have to specify that when this async call is made, we need to invoke `onValidationComplete()`. If this object was not a mock object, the above assertion alongwith  following mocking would not be possible. Why I mentioned the word async before? because going on callback pattern has one main purpose of being non-blocking operations.
+
+So how are we going to mock the behavior of these objects?
+Mocking a method of an object that is marked as `Mock` is as easy as:
+```
+// this should be done in "Arrange" phase, in our case in setup() method
+Mockito.when(userValidator.validateId(l363)).thenReturn(true);
+```
+This will setup `userValidator` to return true when its `validateId()` is called with id 1363. Similarly we can design many flows using same approach including multiple happy cases and also failure cases to test if code gives expeted output on wrong inputs. All great but this is not applicable for callback/async methods.
+
+Luckily, in Java, we have `Mockito`'s `Answer` to solve the problem. But we have to make another change. Since we want to mock response, we will have to provide it as dependency. See this is how unit tests can help refactor your code to be more decoupled and resilient. Now coming back to point. 
+_Making Response testable in UserService:_ (Refer to UserService2)
+```
+public class UserService2 implements UserValidator { // notice it is not implementing Response Callback now
+
+    private Request request;
+    private UserRepo repo;
+    private Response responseCallback;
+
+    public UserService2(Request request, UserRepo repo, Response response) {
+        this.request = request;
+        this.repo = repo;
+        responseCallback= response;
+    }
+
+ ...
+
+}
+```
+_Mocking Callback object so its calls can be tested by Mockito:_
+```
+
+@RunWith(MockitoJUnitRunner.class)
+public class UserService2Test {
+
+    private UserService2 userService;
+
+    @Mock
+    Request request;
+
+    @Mock
+    UserRepo userRepo;
+
+    @Mock
+    User user;
+
+    @Mock
+    private Response response;
+
+    @Before
+    public void setup() {
+        userService = new UserService2(request, userRepo, response);
+        mockRequestCallbackResponse();
+    }
+
+    @Test
+    public void testCreateUser_validUserProvided_shouldCallRequestExecuteWithUser() {
+        // act
+        userService.createUser(user);
+        // assert
+        Mockito.verify(request).execute(user, response); // verify request.execute was called
+        Mockito.verify(response).onSuccess(user); // verify callback method was called with parameter specified
+
+    }
+    
+    // call onSuccess on 2nd argument object as in invocation.getArguments()[1] (0 - first, 1 - second)
+    private void mockRequestCallbackResponse() {
+        Mockito.doAnswer((Answer<Void>) invocation -> {
+            Response callback = (Response) invocation.getArguments()[1];
+            callback.onSuccess(user);
+            return null;
+            // when request.execute is called
+        }).when(request).execute(user, response);
+       
+    }
+
+}
+```
+_This is like: When `request.execute(user, response)` is called, call `onSuccess(user)` on response object that was passed._
+And the parameter checks will work like same as mentioned before.
+
+Now you have powerful tools at your disposal to write unit tests for most of the code in your project. To put things in perspective, testing on methods that return anything is done by simple `asserts` that test state of returned values. Testing on methods that dont return anything is done by `verify`. Although it takes much effort to test methods that return no value, but we can actually test the whole interaction alongwith testing state of the parameters which are same as returned values most of the time.
+
+
+Some developers take approach of mocking servers that use Retrofit callbacks and those clients. I am not against it but I think the goal in unit tests is just to mock this layer and if we can do it in a simpler way by just using `Mockito` in Java why not go for it, although this way needs an abstraction layer but thats what makes code loosely coupled. This is also applicable to testing network calls, I/O async calls or any long running operation that business logic involves. As long as dependencies are well managed and code is loosely coupled, you can almost write test in any case!
+
+
+_Feel free to give feedback on what I might have missed or what can be improved in this small piece of writing. Thanks for reading!_
