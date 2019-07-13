@@ -1,4 +1,3 @@
-package com.munchies.customer.auth.register.presenters;
 
 public class Address {
     private String addressLine;
