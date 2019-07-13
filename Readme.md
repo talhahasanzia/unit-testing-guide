@@ -41,6 +41,7 @@ In the following discussion I will be using Java as the example language and som
 - First and foremost thing is separating the dependencies from the code. For this you should be able to recognize what are the dependencies and what is the actual code that needs to be tested.
 - In terms of Java and Android, if you are working in Android, your business layer should be testable without any Android dependencies.
 - Continuing on Android as example, for the business layer (and unit tests themselves), most of the Android framework stuff will be dependencies for code. Like network library, Retrofit.
+- Considering framework elements as dependencies is helpful but we still need a layer of abstraction so we can drive these framework objects the way we want to, consider following:
 
 _Instead of:_
 ```
