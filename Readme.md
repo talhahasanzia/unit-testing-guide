@@ -11,6 +11,8 @@ Please follow https://testing.googleblog.com/ for updates on new testing librari
 There are generally 2 approaches when writing unit tests,
 - One is test-driven-development, in which unit tests are written first, these tests specify requirements and at first they should fail because there is no code to produce required output, the code is then written around them to meet requirements and make tests pass.
 - Other approach is retrospective testing, that is, after writing code, we write unit tests. This is more commonly used approach in practice (if there are unit tests written at all). We simply write code and then write unit tests after the code and validate code behaviours.
+
+
 _With both approaches, it is a good practice to run unit tests as often as you can, after every code change, this will result in early identification of flaws in the system._
 
 ## Who writes Unit Tests?
