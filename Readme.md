@@ -16,9 +16,9 @@ There are generally 2 approaches when writing unit tests,
 - Developers. Period.
 
 ## Why should you write Unit Tests?
-- Unit tests validate small pieces code for expected outcomes and .
+- Unit tests validate small pieces code for expected outcomes and report early issues.
 - Unit tests also make sure that the code is giving errors where expected, this way a lot of corner cases are covered.
-- Allows identification of logical bugs in the code.
+- Allows identification of logical bugs in the code when they are covering edge cases.
 - If unit tests are written regugarly, they make code resist to changes that breaks the code. If a change in the code fails the unit test, either the code has issue or test is not updated, both ways, its a warning sign for developer to put an extra effort to investgate the issue before closing the development cycle.
 - It seems waste of time and extra effort at the beginning, and it is, but few days effort of maintaining the code with meaningful unit tests saves months of refactoring later.
 - It makes code cleaner - since the tests require certain level of abstraction and loose coupling which make code more cleaner.
@@ -48,4 +48,9 @@ In the following discussion I will be using Java as the example language and som
 - Always use interfaces (in java atleast the interface is available) while calling public methods, this ensures the implementation is hidden and can be mocked easily.
 - When writing a test for a class, the target class should be instantiated as a concrete implementation, so the real code is ran, and all other participating objects are mocked. If the participating objects have abstraction (they are interface objects), mocking becomes so easy.
 ### Writing Unit Tests
+- We will use Java and its testing framework JUnit in these examples, moreover, we will refer Mockito for mocking objects. With these tools, we will focus on UserService (or UserManager) example, in which, we will validate creation of valid users in a system.
+- AAA Testing Pattern - Arrange, Act, Assert is the pattern used in testing that goes as follows:
+  - Arrange: Setup objects, parameters and environment for the test
+  - Act: Perform action, the actual code is ran on which test is to be done
+  - Assert: Assertion or validation is made on the action that was performed whether it is giving required results or not
 
