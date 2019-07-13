@@ -6,7 +6,7 @@
 - A unit test usually targets a single method that perform a single task.
 - Test ensures that the code is behaving as expected and that code has a deterministic outcome.
 
-## When the Unit Tests are written/ran?
+## When the Unit Tests are written/run?
 There are generally 2 approaches when writing unit tests,
 - One is test-driven-development, in which unit tests are written first, these tests specify requirements and at first they should fail because there is no code to produce required output, the code is then written around them to meet requirements and make tests pass.
 - Other approach is retrospective testing, that is, after writing code, we write unit tests. This is more commonly used approach in practice (if there are unit tests written at all). We simply write code and then write unit tests after the code and validate code behaviours.
@@ -175,3 +175,6 @@ _We can later define how "request" behaves when its methods are called, same for
   - Arrange: Setup objects, parameters and environment for the test
   - Act: Perform action, the actual code is ran on which test is to be done
   - Assert: Assertion or validation is made on the action that was performed if it is giving required results or not
+  
+ _Lets setup objects first:_
+ 
