@@ -48,9 +48,12 @@ In the following discussion I will be using Java as the example language and som
 - Always use interfaces (in java atleast the interface is available) while calling public methods, this ensures the implementation is hidden and can be mocked easily.
 - When writing a test for a class, the target class should be instantiated as a concrete implementation, so the real code is ran, and all other participating objects are mocked. If the participating objects have abstraction (they are interface objects), mocking becomes so easy.
 ### Writing Unit Tests
-- We will use Java and its testing framework JUnit in these examples, moreover, we will refer Mockito for mocking objects. With these tools, we will focus on UserService (or UserManager) example, in which, we will validate creation of valid users in a system.
-- AAA Testing Pattern - Arrange, Act, Assert is the pattern used in testing that goes as follows:
+- We will use Java and its testing framework JUnit in these examples, moreover, we will refer Mockito for mocking objects. 
+- We will focus on UserService (or UserManager) example, in which, we will validate creation of valid users in a system.
+- We will not test classes that serves as dependencies in the UserService, these are UI classes referred as "View" in most of the architectures and Network classes like Request or Response. We will mock these dependencies.
+- It is not our responsibility to test 3rd Party library classes like Retrofit, Gson, Picasso, OkHttp etc.
+- Meaningful names of test methods - test method names should be self explanatory.
+- AAA Testing Pattern - Arrange, Act, Assert is the pattern we will use and it goes as follows:
   - Arrange: Setup objects, parameters and environment for the test
   - Act: Perform action, the actual code is ran on which test is to be done
-  - Assert: Assertion or validation is made on the action that was performed whether it is giving required results or not
-
+  - Assert: Assertion or validation is made on the action that was performed if it is giving required results or not
