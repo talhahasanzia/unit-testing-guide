@@ -1,6 +1,5 @@
 
-# Unit Testing CheatSheet
-
+# Unit Testing Guide
 ## What is Unit Testing?
 - In its simplest term, unit testing is testing a small piece of code.
 - A unit test usually targets a single method that perform a single task.
@@ -176,5 +175,26 @@ _We can later define how "request" behaves when its methods are called, same for
   - Act: Perform action, the actual code is ran on which test is to be done
   - Assert: Assertion or validation is made on the action that was performed if it is giving required results or not
   
- _Lets setup objects first:_
+  
+See [`UserServiceTest`](https://github.com/talhahasanzia/unit-testing-cheatsheet/blob/master/UserServiceTest.java) for details
+ 
+ ### Arrange
+ _Lets declare objects first:_
+ ```
+    private UserService userService;
+
+    @Mock
+    Request request;
+
+    @Mock
+    UserRepo userRepo;
+
+ ```
+ _How mocks work? see this:_
+ ```
+    // MockitoJunitRunner initializes mocks itself when tests starts
+    @RunWith(MockitoJUnitRunner.class)
+    public class UserServiceTest {
+```
+
  
